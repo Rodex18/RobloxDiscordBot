@@ -8,6 +8,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('🟢 API de RobloxDiscordBot funcionando');
+});
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds
