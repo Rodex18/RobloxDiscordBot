@@ -1,7 +1,11 @@
 require('dotenv').config();
 
 const express = require('express');
-const { Client, GatewayIntentBits } = require('discord.js');
+const {
+    Client,
+    GatewayIntentBits,
+    EmbedBuilder
+} = require('discord.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,7 +28,7 @@ client.once('clientReady', () => {
 
 app.post('/roblox/log', async (req, res) => {
 
-    // 🔐 Comprobar API Key
+    // 🔐 API Key
     const apiKey = req.headers['x-api-key'];
 
     if (!apiKey || apiKey !== process.env.API_KEY) {
@@ -59,19 +63,30 @@ app.post('/roblox/log', async (req, res) => {
             });
         }
 
-        let mensaje = `🟢 **${tipo}**\n\n`;
+        // 🎨 Crear Embed
+        const embed = new EmbedBuilder()
+            .setTitle(`📋 ${tipo}`)
+            .setDescription('Registro del sistema de Roblox')
+            .setTimestamp();
 
+        // 📦 Añadir los datos
         if (datos && typeof datos === 'object') {
 
             for (const [clave, valor] of Object.entries(datos)) {
 
-                mensaje += `**${clave}:** ${valor}\n`;
+                embed.addFields({
+                    name: String(clave),
+                    value: String(valor),
+                    inline: true
+                });
 
             }
 
         }
 
-        await canal.send(mensaje);
+        await canal.send({
+            embeds: [embed]
+        });
 
         res.json({
             success: true,
