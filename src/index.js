@@ -12,10 +12,6 @@ app.get('/', (req, res) => {
     res.send('🟢 RobloxDiscordBot API funcionando');
 });
 
-app.get('/', (req, res) => {
-    res.send('🟢 API de RobloxDiscordBot funcionando');
-});
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds
@@ -27,6 +23,19 @@ client.once('clientReady', () => {
 });
 
 app.post('/roblox/log', async (req, res) => {
+
+    // 🔐 Comprobar API Key
+    const apiKey = req.headers['x-api-key'];
+
+    if (!apiKey || apiKey !== process.env.API_KEY) {
+        console.log('🚨 Petición rechazada: API Key inválida');
+
+        return res.status(401).json({
+            success: false,
+            message: 'API Key inválida'
+        });
+    }
+
     console.log('📥 Log recibido desde Roblox:');
     console.log(req.body);
 
@@ -60,6 +69,7 @@ app.post('/roblox/log', async (req, res) => {
         });
     }
 });
+
 app.listen(PORT, () => {
     console.log(`🌐 API funcionando en el puerto ${PORT}`);
 });
