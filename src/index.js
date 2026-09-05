@@ -40,6 +40,7 @@ app.post('/roblox/log', async (req, res) => {
     console.log(req.body);
 
     try {
+
         const canal = await client.channels.fetch('1545236516132098068');
 
         if (!canal) {
@@ -49,11 +50,28 @@ app.post('/roblox/log', async (req, res) => {
             });
         }
 
-        const { tipo, jugador } = req.body;
+        const { tipo, datos } = req.body;
 
-        await canal.send(
-            `🟢 **${tipo}**\n👤 Jugador: ${jugador}`
-        );
+        if (!tipo) {
+            return res.status(400).json({
+                success: false,
+                message: 'Falta el tipo de log'
+            });
+        }
+
+        let mensaje = `🟢 **${tipo}**\n\n`;
+
+        if (datos && typeof datos === 'object') {
+
+            for (const [clave, valor] of Object.entries(datos)) {
+
+                mensaje += `**${clave}:** ${valor}\n`;
+
+            }
+
+        }
+
+        await canal.send(mensaje);
 
         res.json({
             success: true,
@@ -61,12 +79,14 @@ app.post('/roblox/log', async (req, res) => {
         });
 
     } catch (error) {
+
         console.error('Error enviando a Discord:', error);
 
         res.status(500).json({
             success: false,
             message: 'Error enviando el log a Discord'
         });
+
     }
 });
 
