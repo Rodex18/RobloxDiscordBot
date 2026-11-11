@@ -15,10 +15,6 @@ const CANAL_ID = '1545236516132098068';
 
 app.use(express.json({ limit: '32kb' }));
 
-// =====================================
-// CONFIGURACIÓN DEL SISTEMA
-// =====================================
-
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
 });
@@ -56,10 +52,6 @@ const TITULOS = {
     ADMIN_TP: 'Teletransporte ejecutado',
     ADMIN_BRING: 'Jugador trasladado'
 };
-
-// =====================================
-// FUNCIONES AUXILIARES
-// =====================================
 
 function obtenerColor(tipo) {
     const t = tipo.toUpperCase();
@@ -131,17 +123,9 @@ function limitarTexto(texto, limite) {
     return texto.slice(0, limite - 3) + '...';
 }
 
-// =====================================
-// RUTA PRINCIPAL
-// =====================================
-
 app.get('/', (req, res) => {
     res.send('RobloxDiscordBot API funcionando');
 });
-
-// =====================================
-// RECEPCIÓN DE LOGS DE ROBLOX
-// =====================================
 
 app.post('/roblox/log', async (req, res) => {
 
@@ -259,10 +243,6 @@ app.post('/roblox/log', async (req, res) => {
         });
     }
 });
-
-// =====================================
-// INICIAR SERVIDOR Y BOT
-// =====================================
 
 app.listen(PORT, () => {
     console.log(`API funcionando en el puerto ${PORT}`);
